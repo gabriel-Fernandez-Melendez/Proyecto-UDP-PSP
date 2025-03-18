@@ -89,7 +89,8 @@ public class Servidor {
                 i++;
             }
 
-            //Durante la carrera
+            //Durante la carrera (aqui  podemos parar y continuar los azances de cada jinete) = es importante para indicar cuando se disparan 
+            
             do {
                 synchronized (this) {
                     wait();
