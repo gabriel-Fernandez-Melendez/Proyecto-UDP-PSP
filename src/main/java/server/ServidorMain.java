@@ -9,6 +9,7 @@ package server;
  *
  * @author link
  */
+//UN EJERCICIO  COMO ESTE ENTRA AL EXAMEN
 public class ServidorMain {
     public static void main(String[] args) {
         Servidor servidor=new Servidor();
