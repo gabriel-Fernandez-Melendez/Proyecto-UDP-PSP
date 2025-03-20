@@ -9,7 +9,7 @@ package server;
  *
  * @author link
  */
-//UN EJERCICIO  COMO ESTE ENTRA AL EXAMEN
+//UN EJERCICIO  COMO ESTE ENTRA AL EXAMEN Este metodo solo llama al servidor para ser ejecutado
 public class ServidorMain {
     public static void main(String[] args) {
         Servidor servidor=new Servidor();

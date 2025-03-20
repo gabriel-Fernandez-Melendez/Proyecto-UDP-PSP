@@ -17,7 +17,7 @@ public class ClienteMain {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) { //ejecuta el metodo run de 4 hilos (es mejor hacer esta ejecucion con un for de la cantidad de hilos a abrir)
         Cliente cliente1=new Cliente("Cliente 1");
         cliente1.start();
         try {

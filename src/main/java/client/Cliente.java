@@ -20,6 +20,7 @@ import server.Servidor;
  */
 public class Cliente extends Thread {
 
+	//no tiene atributos pero se le pone un string directo en el constructor
     public Cliente(String nombre) {
         this.setName(nombre);
     }
@@ -46,13 +47,13 @@ public class Cliente extends Thread {
             byte[] buffer = mensaje.getBytes();
             //ahora construyo el paquete, especifico destino
             //Ahora creamos el datagrama que será enviado por el socket 's'.
-            p = new DatagramPacket(buffer, mensaje.length(), InetAddress.getLocalHost(), 5555);
+            p = new DatagramPacket(buffer, mensaje.length(), InetAddress.getLocalHost(), 5555);//lo enviamos al mismo puerto que esta en escucha en el server 
             s.send(p); //envio datagrama
 
             //Acuse de recibo
             int puerto, longitud;
             InetAddress dir;
-            p2 = new DatagramPacket(buffer2, 256);
+            p2 = new DatagramPacket(buffer2, 256);// se obtienen los datos de forma cruzada (INTERESANTE)
             s.receive(p2);
             buffer2 = p2.getData(); //obtengo datos
             puerto = p2.getPort(); //obtengo puerto origen
@@ -95,7 +96,7 @@ public class Cliente extends Thread {
                    // System.out.println("Posiciones finales: " + bufferPosiciones[0] + ", " + bufferPosiciones[1] + ", " + bufferPosiciones[2] + ", " + bufferPosiciones[3]);
                     v.setPosicionesFinales(bufferPosiciones);
                 }
-            } while (bufferPosiciones[Servidor.getNUMMAXJINETES()]!=-1);
+            } while (bufferPosiciones[Servidor.getNUMMAXJINETES()]!=-1); // ES LO MISMO QUE UN WHILE TRUE
             
         } catch (IOException | InterruptedException e) {
             System.out.println("Se ha producido una excepción: " + e.getLocalizedMessage()); 

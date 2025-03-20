@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author link
  */
-public class GestionClientes extends Thread {
+public class GestionClientes extends Thread {// extiende de hilo
 
     private int idCamello;
     private String jinete;
@@ -29,7 +29,7 @@ public class GestionClientes extends Thread {
         this.servidor = s;
         this.p = p;
         try {
-            this.socket = new DatagramSocket();
+            this.socket = new DatagramSocket(); //lo inicializa en el constructor
         } catch (SocketException ex) {
             Logger.getLogger(GestionClientes.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -38,7 +38,7 @@ public class GestionClientes extends Thread {
     }
 
     @Override
-    public void run() {
+    public void run() { //esto  no hace falta que se sincronze por que cada hilo lo ejecuta por separado
         byte[] buffer, buffer2 = new byte[1];
         int puerto, longitud;
         InetAddress dir;
@@ -53,11 +53,12 @@ public class GestionClientes extends Thread {
             String nombre = ""; 
             for(int i=0; i< servidor.getNombresJinetes().length-1; i++ ) {
                 String s = servidor.getNombresJinetes()[i] +",";
-                nombre += s;}
-            nombre += servidor.getNombresJinetes()[Servidor.getNUMMAXJINETES()-1];
+                nombre += s;
+                }
+            nombre += servidor.getNombresJinetes()[Servidor.getNUMMAXJINETES()-1]; //esto  para hacer contrapeso al +1 (?)
             byte[] bufferEmpezar = nombre.getBytes();
             DatagramPacket pEmpezar = new DatagramPacket(bufferEmpezar, nombre.length(), dir, puerto);
-            socket.send(pEmpezar);
+            socket.send(pEmpezar); //se envia al cliente
 
             DatagramPacket p2;
             int total =0;

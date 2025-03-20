@@ -11,7 +11,7 @@ import java.awt.Color;
  *
  * @author link
  */
-public class ClienteVentanaPodio extends javax.swing.JFrame {
+public class ClienteVentanaPodio extends javax.swing.JFrame { //no entra
     private static ClienteVentanaPodio instancia;
 
     /**

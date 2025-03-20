@@ -20,23 +20,24 @@ import java.util.logging.Logger;
 public class Servidor {
 
     private static final int NUMMAXJINETES = 4;
-    private ArrayList<DatagramPacket> jinetes;  //DatagramPackets de los jinetes.
+    private ArrayList<DatagramPacket> jinetes;  //DatagramPackets de los jinetes. cada datagrampacket es un  kinete del array , maximo de 4
     private byte contadorPosicionFinal;  //Dice cuál es el siguiente puesto.
     private byte[] posicionesFinales;   //Posiciones finales de los jinetes.
     private byte[] avances;  //Avances de los jinetes.
     private int numJinetesListos;   //Número de jinetes que están listos para continuar.
     private int numJinetesAcabado;  //Número de jinetes que han acabado la carrera.
     private boolean fin;
-    private String[] nombresJinetes;
+    private String[] nombresJinetes; // lo mismo que el datagrama pero para imprimir en consola
     
     public void ejecutarServidor() {
-        contadorPosicionFinal = 1;
+        contadorPosicionFinal = 1;  //por que 1 ?
         numJinetesAcabado = 0;
         numJinetesListos = 0;
         nombresJinetes = new String[NUMMAXJINETES];
         posicionesFinales = new byte[NUMMAXJINETES];
         avances = new byte[NUMMAXJINETES];
         for(int i=0; i<NUMMAXJINETES; i++) {
+        	//instancia los datos a datos invalidos
             nombresJinetes[i]="";
             posicionesFinales[i] = 0;
             avances[i] = 0;
@@ -47,8 +48,8 @@ public class Servidor {
             jinetes = new ArrayList();
             System.out.println("Comienza la ejecucion del servidor. Escuchando...");
 
-            byte[] buffer = new byte[256], buffer2;
-            DatagramSocket s = new DatagramSocket(5555); // puerto de eco
+            byte[] buffer = new byte[256], buffer2; //este es el tamaño maximo posible
+            DatagramSocket s = new DatagramSocket(5555); // puerto de eco (este es el puerto a la escucha)
             DatagramPacket p, p2;
 
             int puerto, longitud;
@@ -58,14 +59,13 @@ public class Servidor {
             //Esperamos los jinetes
             int jinete = 0;
             do {
-                p = new DatagramPacket(buffer, 256);
+                p = new DatagramPacket(buffer, 256); //el segundo dato es el tamaño de bytes a leer? (chatgpt)
                 s.receive(p); //espero un datagrama, se queda esperando hasta que llega un datagrama.
-
                 buffer = p.getData(); //obtengo datos
                 puerto = p.getPort(); //obtengo puerto origen
                 dir = p.getAddress(); //obtengo dir IP
                 longitud = p.getLength(); //longitud del mensaje
-                mensaje = new String(buffer, 0, longitud); //texto del mensaje
+                mensaje = new String(buffer, 0, longitud); //texto del mensaje (es un tostring que lee del byte 0 al 256)
                 String nombre = mensaje;
                 this.nombresJinetes[jinete]=mensaje;
                 System.out.println("Entra el jinete: "+nombre+" por calle "+(jinete)+". Recibido desde " + dir + ":" + puerto + " > ");
@@ -75,10 +75,10 @@ public class Servidor {
                 buffer2 = mensaje.getBytes();
                 //ahora construyo el paquete, especifico destino
                 //Ahora creamos el datagrama que será enviado por el socket 's'.
-                p2 = new DatagramPacket(buffer2, mensaje.length(), dir, puerto);
+                p2 = new DatagramPacket(buffer2, mensaje.length(), dir, puerto); //para responder al cliente hay que pasar el dir y el puerto
                 s.send(p2); //envio datagrama 
                 jinetes.add(p);
-                jinete++;
+                jinete++; //contador de numero de jinetes
             } while (jinetes.size() < NUMMAXJINETES);
 
             //Empezamos los hilos que manejan los clientes.
@@ -100,11 +100,11 @@ public class Servidor {
                 synchronized (this) {
                     notifyAll();
                 }
-            } while (numJinetesAcabado < NUMMAXJINETES);
+            } while (numJinetesAcabado < NUMMAXJINETES); //este bucle acaba cuando todos los ginetes terminan
 
             fin=true;
            
-            //Posiciones finales
+            //Posiciones finales NO ENTIENDO PORQUE UNA VEZ MAS
             synchronized (this) {
                 wait();
             }
@@ -148,14 +148,14 @@ public class Servidor {
         if ((this.avances[posicion] + avance) < 100) {
             this.avances[posicion] += avance;
         } else {
-            if (this.avances[posicion] < 100) {
+            if (this.avances[posicion] < 100) { //si llegan a 100 es que han completado la carrera
                 this.avances[posicion] = 100;
                 this.numJinetesAcabado++;
             }
         }
         numJinetesListos++;
 
-        //Si todos los hilos están listos para continuar se despierta al servidor.
+        //Si todos los hilos están listos para continuar se despierta al servidor. (por primera vez)
         if (numJinetesListos == NUMMAXJINETES) {
             notifyAll();
         } else {
@@ -179,11 +179,11 @@ public class Servidor {
 
 
     /**
-     * Devuelve el vector con las posiciones finales de los jinetes.
+     * Devuelve el vector con las posiciones finales de los jinetes. (Entender bien  por que symcronized)
      * @return
      */
     public synchronized byte[] getPosicionesFinales() {
-        if (contadorPosicionFinal == NUMMAXJINETES+1) {
+        if (contadorPosicionFinal == NUMMAXJINETES+1) { // puede que esto sea lo que cierra la carrera
             notifyAll();
         } else {
             try {

@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  *
  * @author link
  */
-public class ClienteVentanaCarrera extends javax.swing.JFrame {
+public class ClienteVentanaCarrera extends javax.swing.JFrame { //no entra
     public static int posicion;
     private String[] nombresJinetes;
     private byte[] posicionesFinales;
